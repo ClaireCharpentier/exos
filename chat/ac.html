@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Ajax - La fonction ajax()</title>
+        <style>
+            #cadre{
+                background-color: #679FA3;
+                width: 400px;
+                height: 600px;
+            }
+            #view{
+                background-color: #95E5EB;
+                height: 400px;
+                overflow:auto ;
+
+            }
+            input, textarea{
+                width: 100%;
+
+            }
+        </style>
+    </head>
+
+    <body>
+        <div id="cadre">
+
+            <fieldset>
+                <legend>Un chat en JQUERY !</legend>
+                <div id="view"></div>
+                <div id='inputText'>
+                    <label for="name">Pseudo :</label><input type="text" id="user_name" name="user_name">
+                    <label for="message">Message :</label><textarea id="user_message" name="user_message"></textarea>
+                    <button id="send">Envoyer le message</button>
+                </div>
+            </fieldset>
+
+        </div>
+
+        <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+        <script>
+
+
+            $(function ()
+            {
+
+
+
+                $('#send').click(
+                    function () {
+
+                        /*AU CLIQUE AFFICHER DANS VIEW*/
+                        var user_name = $("#user_name").val();
+                        var user_message = $('#user_message').val();
+
+                        addMessage(user_name, user_message);
+
+                        /*RECUPERER ET STOCKER DANS JSON*/
+                        $.post(
+                            'chat.php', // Le fichier cible côté serveur.
+                            {
+                                user_name: $("#user_name").val(), // Nous supposons que ce formulaire existe dans le DOM.
+                                user_message: $("#user_message").val()
+                            }
+                        )
+                        /*SUPPRIME APRES VALIDATION*/
+                        $('#user_name').val("");
+                        $('#user_message').val("");
+                    });
+
+                /*AFFICHER LES MESSAGES EXISTANTS*/
+                $.getJSON('./messages.json', function (donnees) {
+                    console.log(donnees);
+                    for (var i = 0; i < donnees.length; i++) {
+                        addMessage(donnees[i].user_name, donnees[i].user_message);
+                    }
+
+
+                });
+
+                function addMessage(pseudo, message) {
+
+                    $('#view').append('<strong>' + pseudo + '</strong>' + ' : ');
+                    $('#view').append(message + '<br>');
+                }
+            });
+
+        </script>
+    </body>
+</html>
+
+
+
+
+
+
+
+
+
+<!-- 
+
+
+ 
+
+    /*  var sendToJson = function (){
+
+        $('#name').append('<p><b>Age</b> : ' + nom + '</p>');
+        $('#message').append('<p><b>Ville</b> : ' + message + '</p>');
+        console.log(sendToJson);
+      }*/
+
+
+      //$("#view").load("./messages.json");
+-->
+
+
